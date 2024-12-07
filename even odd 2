@@ -1,0 +1,31 @@
+#include <iostream>
+
+int findElementIndex(int n, int k) {
+    // Calculate total count of odd and even numbers
+    int totalOdds = (n + 1) / 2;
+    int totalEvens = n / 2;
+    
+    // If k is an odd number
+    if (k % 2 == 1) {
+        // Position in descending odd series
+        return (totalOdds - (k / 2 + 1)) + 1;
+    }
+    
+    // If k is an even number
+    else {
+        // Position in ascending even series
+        return totalOdds + (k / 2);
+    }
+}
+
+int main() {
+    int n, k;
+    
+    // Read input
+    std::cin >> n >> k;
+    
+    // Print the result
+    std::cout << findElementIndex(n, k) << std::endl;
+    
+    return 0;
+}
