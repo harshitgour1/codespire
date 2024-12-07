@@ -1,0 +1,41 @@
+def find_treasure_pair(n, values, target):
+    """
+    Find a pair of numbers in the list that sum to the target.
+    
+    Args:
+        n (int): Number of values in the list
+        values (list): List of integers
+        target (int): Target sum to find
+    
+    Returns:
+        str: "MATCH" if a pair is found, "NO MATCH" otherwise
+    """
+    # Use a hash set for O(n) time complexity
+    seen = set()
+    
+    for num in values:
+        complement = target - num
+        
+        # Check if the complement exists in the set of seen numbers
+        if complement in seen:
+            return "MATCH"
+        
+        # Add current number to the set of seen numbers
+        seen.add(num)
+    
+    return "NO MATCH"
+
+# Input processing
+def main():
+    # Read inputs
+    n = int(input())
+    values = list(map(int, input().split()))
+    target = int(input())
+    
+    # Find and print result
+    result = find_treasure_pair(n, values, target)
+    print(result)
+
+# Only run main() if the script is run directly
+if __name__ == "__main__":
+    main()
