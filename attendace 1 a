@@ -1,0 +1,82 @@
+def find_most_attended_subject():
+    """
+    Track and analyze subject attendance with comprehensive input handling.
+    
+    Returns:
+    str: The initial of the most attended subject
+    
+    Raises:
+    ValueError: For invalid input conditions
+    """
+    # Valid subject initials
+    valid_subjects = {'M', 'C', 'P', 'D', 'E'}
+    
+    # Initialize subject attendance tracking
+    subject_counts = {subject: 0 for subject in valid_subjects}
+    
+    try:
+        # Input handling with error checking
+        print("Enter attendance for 100 days (one initial per day):")
+        print("Valid initials: M (Mathematics), C (Chemistry), P (Physics), D (Digital Logic), E (Environmental Science)")
+        
+        # Collect input and validate
+        attendance = []
+        for day in range(1, 101):
+            while True:
+                subject = input(f"Day {day}: ").strip().upper()
+                
+                # Validate input
+                if subject not in valid_subjects:
+                    print(f"Invalid input. Please enter one of: {', '.join(valid_subjects)}")
+                    continue
+                
+                attendance.append(subject)
+                subject_counts[subject] += 1
+                break
+        
+        # Verify total entries
+        if len(attendance) != 100:
+            raise ValueError("Incomplete attendance record. Exactly 100 entries are required.")
+        
+        # Find the subject with maximum attendance
+        most_attended = max(subject_counts, key=subject_counts.get)
+        max_attendance = subject_counts[most_attended]
+        
+        # Verify attendance constraint
+        if max_attendance < 51:
+            raise ValueError("No subject meets the minimum attendance requirement of 51 days.")
+        
+        # Detect and handle potential ties
+        tied_subjects = [
+            subj for subj, count in subject_counts.items() 
+            if count == max_attendance
+        ]
+        
+        if len(tied_subjects) > 1:
+            print("Attendance Tie Detected:")
+            for subject in tied_subjects:
+                print(f"{subject}: {max_attendance} days")
+            print("Choosing the first subject in alphabetical order.")
+            most_attended = min(tied_subjects)
+        
+        # Display detailed attendance report
+        print("\nAttendance Report:")
+        for subject, count in sorted(subject_counts.items()):
+            print(f"{subject}: {count} days ({count}%)")
+        
+        print(f"\nMost Attended Subject: {most_attended} with {max_attendance} days")
+        return most_attended
+    
+    except Exception as e:
+        print(f"Error in attendance tracking: {e}")
+        return None
+
+# Main execution
+def main():
+    try:
+        result = find_most_attended_subject()
+    except Exception as e:
+        print(f"An unexpected error occurred: {e}")
+
+if __name__ == "__main__":
+    main()
