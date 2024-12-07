@@ -1,0 +1,132 @@
+#include <iostream>
+#include <unordered_map>
+#include <unordered_set>
+#include <vector>
+#include <limits>
+#include <algorithm>
+#include <stdexcept>
+
+class AttendanceTracker {
+private:
+    // Set of valid subject initials
+    const std::unordered_set<char> validSubjects = {'M', 'C', 'P', 'D', 'E'};
+    
+    // Attendance tracking container
+    std::unordered_map<char, int> subjectCounts;
+
+    // Input validation method
+    char validateInput() {
+        char subject;
+        while (true) {
+            std::cin >> subject;
+            
+            // Convert to uppercase
+            subject = std::toupper(subject);
+
+            // Check if input is valid
+            if (std::cin.fail()) {
+                std::cin.clear();
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                std::cerr << "Invalid input. Please try again.\n";
+                continue;
+            }
+
+            // Validate against allowed subjects
+            if (validSubjects.find(subject) == validSubjects.end()) {
+                std::cerr << "Invalid subject initial. Please enter one of: M, C, P, D, E\n";
+                continue;
+            }
+
+            return subject;
+        }
+    }
+
+public:
+    // Constructor to initialize subject counts
+    AttendanceTracker() {
+        for (char subject : validSubjects) {
+            subjectCounts[subject] = 0;
+        }
+    }
+
+    // Method to track attendance
+    char trackAttendance() {
+        const int TOTAL_DAYS = 100;
+        std::vector<char> attendance;
+
+        std::cout << "Enter attendance for 100 days (one initial per day):\n";
+        std::cout << "Valid initials: M (Mathematics), C (Chemistry), P (Physics), "
+                     "D (Digital Logic), E (Environmental Science)\n";
+
+        // Collect 100 days of attendance
+        for (int day = 1; day <= TOTAL_DAYS; ++day) {
+            std::cout << "Day " << day << ": ";
+            char subject = validateInput();
+            
+            attendance.push_back(subject);
+            ++subjectCounts[subject];
+        }
+
+        // Find maximum attendance
+        int maxAttendance = 0;
+        char mostAttendedSubject = ' ';
+
+        // Identify most attended subject
+        for (const auto& [subject, count] : subjectCounts) {
+            if (count > maxAttendance) {
+                maxAttendance = count;
+                mostAttendedSubject = subject;
+            }
+        }
+
+        // Verify attendance constraint
+        if (maxAttendance < 51) {
+            throw std::runtime_error("No subject meets the minimum attendance requirement of 51 days.");
+        }
+
+        // Check for ties
+        std::vector<char> tiedSubjects;
+        for (const auto& [subject, count] : subjectCounts) {
+            if (count == maxAttendance) {
+                tiedSubjects.push_back(subject);
+            }
+        }
+
+        // Tie-breaking (alphabetical order)
+        if (tiedSubjects.size() > 1) {
+            std::sort(tiedSubjects.begin(), tiedSubjects.end());
+            mostAttendedSubject = tiedSubjects[0];
+            
+            std::cout << "Attendance Tie Detected:\n";
+            for (char subject : tiedSubjects) {
+                std::cout << subject << ": " << maxAttendance << " days\n";
+            }
+            std::cout << "Choosing: " << mostAttendedSubject << "\n";
+        }
+
+        // Print detailed attendance report
+        std::cout << "\nAttendance Report:\n";
+        for (const auto& [subject, count] : subjectCounts) {
+            std::cout << subject << ": " << count << " days (" 
+                      << (count * 100 / TOTAL_DAYS) << "%)\n";
+        }
+
+        std::cout << "\nMost Attended Subject: " << mostAttendedSubject 
+                  << " with " << maxAttendance << " days\n";
+
+        return mostAttendedSubject;
+    }
+};
+
+int main() {
+    try {
+        AttendanceTracker tracker;
+        tracker.trackAttendance();
+    }
+    catch (const std::exception& e) {
+        std::cerr << "Error: " << e.what() << std::endl;
+        return 1;
+    }
+
+    return 0;
+}
