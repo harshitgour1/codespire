@@ -1,0 +1,57 @@
+def is_prime(n):
+    """Check if a number is prime."""
+    if n < 2:
+        return False
+    for i in range(2, int(n**0.5) + 1):
+        if n % i == 0:
+            return False
+    return True
+
+def count_prime_equivalent_hours(D, P):
+    """
+    Count instances of equivalent hours that are prime in all parts.
+    
+    Args:
+        D (int): Total hours in the day
+        P (int): Number of day parts
+    
+    Returns:
+        int: Number of prime equivalent hour instances
+    """
+    # Validate input constraints
+    if not (10 <= D < 500 and 2 <= P < 50):
+        raise ValueError("Input values outside allowed constraints")
+    
+    # Hours per part
+    hours_per_part = D // P
+    
+    # Track instances of prime equivalent hours
+    prime_equivalent_count = 0
+    
+    # Check each hour in the first part
+    for initial_hour in range(hours_per_part):
+        # Track corresponding hours in all parts
+        equivalent_hours = [initial_hour]
+        
+        # Calculate equivalent hours in other parts
+        for part in range(1, P):
+            equivalent_hour = (initial_hour + part * hours_per_part) % D
+            equivalent_hours.append(equivalent_hour)
+        
+        # Verify if all equivalent hours are prime
+        if all(is_prime(hour) for hour in equivalent_hours):
+            prime_equivalent_count += 1
+    
+    return prime_equivalent_count
+
+# Example usage and testing
+def main():
+    # Read input
+    D, P = map(int, input().split())
+    
+    # Calculate and print result
+    result = count_prime_equivalent_hours(D, P)
+    print(result)
+
+if __name__ == "__main__":
+    main()
