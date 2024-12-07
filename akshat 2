@@ -1,0 +1,42 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+// Function to calculate the amount Akshat can spend
+int calculateSpending(int date) {
+    string dateStr = to_string(date); // Convert the integer to a string
+
+    int evenPositionProduct = 1;
+    int oddPositionSum = 0;
+
+    // Iterate through the date string
+    for (size_t i = 0; i < dateStr.length(); ++i) {
+        int digit = dateStr[i] - '0'; // Convert character to integer
+
+        if ((i + 1) % 2 == 0) { // Check for even position (1-based index)
+            evenPositionProduct *= digit;
+        } else { // Odd position (1-based index)
+            oddPositionSum += digit;
+        }
+    }
+
+    // Ensure odd_position_sum is not zero to avoid division by zero
+    if (oddPositionSum == 0) {
+        return 0;
+    }
+
+    // Calculate the result
+    int result = evenPositionProduct / oddPositionSum; // Use integer division
+    return result;
+}
+
+int main() {
+    int A;
+    cout << "Enter the date in DDMMYYYY format: ";
+    cin >> A;
+
+    // Output the result
+    cout << calculateSpending(A) << endl;
+
+    return 0;
+}
