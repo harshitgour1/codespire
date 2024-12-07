@@ -1,0 +1,90 @@
+def sieve_of_eratosthenes(limit):
+    """
+    Generate primes up to a given limit using the Sieve of Eratosthenes.
+    
+    Args:
+        limit (int): Upper bound for prime generation
+    
+    Returns:
+        set: Set of prime numbers up to the limit
+    """
+    # Initialize sieve
+    sieve = [True] * (limit + 1)
+    sieve[0] = sieve[1] = False
+    
+    # Mark non-primes
+    for i in range(2, int(limit**0.5) + 1):
+        if sieve[i]:
+            for j in range(i*i, limit + 1, i):
+                sieve[j] = False
+    
+    # Collect primes
+    return {num for num in range(limit + 1) if sieve[num]}
+
+def count_prime_equivalent_hours(D, P):
+    """
+    Efficiently count instances of equivalent hours that are prime in all parts.
+    
+    Args:
+        D (int): Total hours in the day
+        P (int): Number of day parts
+    
+    Returns:
+        int: Number of prime equivalent hour instances
+    """
+    # Validate input constraints with precise error handling
+    if not (10 <= D < 500):
+        raise ValueError(f"Total day hours (D) must be between 10 and 499. Received: {D}")
+    if not (2 <= P < 50):
+        raise ValueError(f"Number of day parts (P) must be between 2 and 49. Received: {P}")
+    
+    # Validate divisibility
+    if D % P != 0:
+        raise ValueError(f"Total day hours (D) must be divisible by day parts (P). {D} is not divisible by {P}")
+    
+    # Precompute primes efficiently
+    hours_per_part = D // P
+    max_hour = D - 1
+    primes = sieve_of_eratosthenes(max_hour)
+    
+    # Optimized counting with early termination and minimal memory usage
+    prime_equivalent_count = 0
+    
+    for initial_hour in range(hours_per_part):
+        # Quick primality check first
+        if initial_hour not in primes:
+            continue
+        
+        # Check equivalent hours in all parts
+        if all(
+            (initial_hour + part * hours_per_part) % D in primes 
+            for part in range(P)
+        ):
+            prime_equivalent_count += 1
+    
+    return prime_equivalent_count
+
+def main():
+    """
+    Main function to handle input, computation, and output.
+    Provides robust input handling and error management.
+    """
+    try:
+        # Read input with error handling
+        D, P = map(int, input().split())
+        
+        # Compute and print result
+        result = count_prime_equivalent_hours(D, P)
+        print(result)
+    
+    except ValueError as e:
+        # Graceful error handling for invalid inputs
+        print(f"Error: {e}")
+        return -1
+    except Exception as e:
+        # Catch-all for unexpected errors
+        print(f"Unexpected error occurred: {e}")
+        return -1
+
+if __name__ == "__main__":
+    main()
