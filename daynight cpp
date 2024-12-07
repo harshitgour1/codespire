@@ -1,0 +1,45 @@
+#include <iostream>
+#include <vector>
+#include <cmath>
+using namespace std;
+
+// Helper function to check if a number is prime
+bool isPrime(int num) {
+    if (num <= 1) return false;
+    for (int i = 2; i <= sqrt(num); i++) {
+        if (num % i == 0) return false;
+    }
+    return true;
+}
+
+int main() {
+    int D, P;
+    cin >> D >> P;
+
+    int partDuration = D / P; // Hours in each part
+    int count = 0;
+
+    // Loop through each hour in the first part
+    for (int hour = 0; hour < partDuration; hour++) {
+        bool allPrimes = true;
+
+        // Check equivalent hours in all parts
+        for (int part = 0; part < P; part++) {
+            int equivalentHour = (hour + part * partDuration) % D;
+            if (!isPrime(equivalentHour)) {
+                allPrimes = false;
+                break;
+            }
+        }
+
+        // If all equivalent hours are prime, increase the count
+        if (allPrimes) {
+            count++;
+        }
+    }
+
+    // Output the result
+    cout << count << endl;
+
+    return 0;
+}
