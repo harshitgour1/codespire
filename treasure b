@@ -1,0 +1,134 @@
+import sys
+
+def find_treasure_pair(values, target):
+    """
+    Find a pair of numbers in the list that sum to the target.
+    
+    Args:
+        values (list): List of integers
+        target (int): Target sum to find
+    
+    Returns:
+        str: "MATCH" if a pair is found, "NO MATCH" otherwise
+    
+    Time Complexity: O(n)
+    Space Complexity: O(n)
+    """
+    # Handle extreme cases
+    if len(values) < 2:
+        return "NO MATCH"
+    
+    # Use a hash set for efficient lookup
+    seen = set()
+    
+    for num in values:
+        complement = target - num
+        
+        # Check if the complement exists in the set of seen numbers
+        if complement in seen:
+            return "MATCH"
+        
+        # Add current number to the set of seen numbers
+        seen.add(num)
+    
+    return "NO MATCH"
+
+def validate_input(n, values, target):
+    """
+    Validate input parameters according to problem constraints.
+    
+    Args:
+        n (int): Number of values
+        values (list): List of integers
+        target (int): Target sum
+    
+    Raises:
+        ValueError: If input parameters do not meet constraints
+    """
+    # Check list size constraints
+    if not (2 <= n <= 10**6):
+        raise ValueError(f"Invalid list size. Must be 2 ≤ n ≤ 10^6. Got n = {n}")
+    
+    # Check list length matches declared size
+    if len(values) != n:
+        raise ValueError(f"List length does not match declared size. Expected {n}, got {len(values)}")
+    
+    # Check individual value constraints
+    for val in values:
+        if not (-10**6 <= val <= 10**6):
+            raise ValueError(f"Value out of range. Must be -10^6 ≤ vi ≤ 10^6. Got {val}")
+    
+    # Check target constraints
+    if not (-2 * 10**6 <= target <= 2 * 10**6):
+        raise ValueError(f"Target out of range. Must be -2×10^6 ≤ T ≤ 2×10^6. Got {target}")
+
+def main():
+    """
+    Main function to handle input, validation, and output.
+    Supports both interactive and file-based input.
+    """
+    try:
+        # Determine input source (interactive or file)
+        if len(sys.argv) > 1:
+            # Read from file if filename provided
+            with open(sys.argv[1], 'r') as file:
+                n = int(file.readline().strip())
+                values = list(map(int, file.readline().split()))
+                target = int(file.readline().strip())
+        else:
+            # Interactive input
+            n = int(input("Enter number of values: "))
+            values = list(map(int, input("Enter space-separated values: ").split()))
+            target = int(input("Enter target sum: "))
+        
+        # Validate input
+        validate_input(n, values, target)
+        
+        # Find and print result
+        result = find_treasure_pair(values, target)
+        print(result)
+    
+    except ValueError as e:
+        # Handle input validation errors
+        print(f"Input Error: {e}", file=sys.stderr)
+        sys.exit(1)
+    except Exception as e:
+        # Catch any unexpected errors
+        print(f"Unexpected Error: {e}", file=sys.stderr)
+        sys.exit(2)
+
+# Comprehensive test cases
+def run_test_cases():
+    """
+    Run a suite of test cases to verify the solution's correctness.
+    """
+    test_cases = [
+        # Basic cases
+        ([1, 4, 45, 6, 10], 16, "MATCH"),      # Simple match
+        ([1, 2, 3, 4, 5], 9, "MATCH"),         # Multiple possible matches
+        ([1, 2, 3, 4, 5], 20, "NO MATCH"),     # No match
+        
+        # Edge cases
+        ([-1, -2, -3, -4, -5], -3, "MATCH"),   # Negative numbers
+        ([0, 0], 0, "MATCH"),                  # Zero values
+        ([-10**6, 10**6], 0, "MATCH"),         # Extreme value range
+        
+        # Boundary conditions
+        ([10**6-1, 10**6], 2*10**6-1, "MATCH"),# Maximum allowed values
+        ([-10**6, -10**6+1], -2*10**6+1, "MATCH"),  # Minimum allowed values
+    ]
+    
+    print("Running Test Cases:")
+    for i, (values, target, expected) in enumerate(test_cases, 1):
+        result = find_treasure_pair(values, target)
+        status = "PASS" if result == expected else "FAIL"
+        print(f"Test Case {i}: {status}")
+        assert result == expected, f"Test Case {i} Failed: Expected {expected}, Got {result}"
+    print("All Test Cases Passed Successfully!")
+
+if __name__ == "__main__":
+    # Option to run test cases or main program
+    if len(sys.argv) > 1 and sys.argv[1] == 'test':
+        run_test_cases()
+    else:
+        main()
