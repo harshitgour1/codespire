@@ -1,0 +1,43 @@
+def find_most_attended_subject(attendance):
+    """
+    Determine the subject with the highest attendance from a 100-day record.
+    
+    Args:
+    attendance (list): A list of 100 subject initials (M, C, P, D, E)
+    
+    Returns:
+    str: The initial of the most attended subject
+    """
+    # Initialize a dictionary to count attendance for each subject
+    subject_counts = {
+        'M': 0,  # Mathematics
+        'C': 0,  # Chemistry
+        'P': 0,  # Physics
+        'D': 0,  # Digital Logic
+        'E': 0   # Environmental Science
+    }
+    
+    # Count attendance for each subject
+    for subject in attendance:
+        subject_counts[subject] += 1
+    
+    # Find the subject with the maximum attendance
+    most_attended = max(subject_counts, key=subject_counts.get)
+    
+    return most_attended
+
+# Example usage
+def main():
+    # Sample input array of 100 subject attendances
+    sample_attendance = [
+        'M', 'C', 'P', 'D', 'E', 'M', 'M', 'M', 'M', 'M',
+        # ... would continue to 100 entries
+    ]
+    
+    result = find_most_attended_subject(sample_attendance)
+    print(f"Most attended subject: {result}")
+
+# The function handles the specified constraints:
+# 1. Always 100 entries in the attendance list
+# 2. Only valid subject initials
+# 3. Guaranteed one subject has ≥51 attendances
