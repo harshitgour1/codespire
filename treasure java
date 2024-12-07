@@ -1,0 +1,56 @@
+import java.util.HashSet;
+import java.util.Scanner;
+import java.util.Set;
+
+public class TreasureHunt {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        
+        // Read the number of values in the list
+        int n = scanner.nextInt();
+        
+        // Read the list of values
+        int[] values = new int[n];
+        for (int i = 0; i < n; i++) {
+            values[i] = scanner.nextInt();
+        }
+        
+        // Read the target sum
+        int target = scanner.nextInt();
+        
+        // Check if a match exists
+        boolean matchFound = findTreasurePair(values, target);
+        
+        // Print the result
+        System.out.println(matchFound ? "MATCH" : "NO MATCH");
+        
+        scanner.close();
+    }
+    
+    /**
+     * Finds if there exists a pair of numbers that sum to the target.
+     * 
+     * @param values Array of integers to search through
+     * @param target The target sum to find
+     * @return true if a pair is found, false otherwise
+     */
+    public static boolean findTreasurePair(int[] values, int target) {
+        // Use a HashSet for efficient lookup
+        Set<Integer> numSet = new HashSet<>();
+        
+        for (int num : values) {
+            // Check if the complement exists in the set
+            int complement = target - num;
+            
+            if (numSet.contains(complement)) {
+                return true;
+            }
+            
+            // Add current number to the set
+            numSet.add(num);
+        }
+        
+        // No matching pair found
+        return false;
+    }
+}
