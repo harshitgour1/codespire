@@ -1,0 +1,18 @@
+def find_element_index(n, k):
+    # Count total odd and even numbers
+    total_odds = (n + 1) // 2
+    total_evens = n // 2
+    
+    # If k is an odd number
+    if k % 2 == 1:
+        # Position in descending odd series
+        return (total_odds - (k // 2 + 1)) + 1
+    
+    # If k is an even number
+    else:
+        # Position in ascending even series
+        return total_odds + (k // 2)
+
+# Read input
+n, k = map(int, input().split())
+print(find_element_index(n, k))
